@@ -34,12 +34,14 @@
         }
 
         header img {
-            width: auto;
             height: 60px;
+            max-width: 100%; /* 画像のサイズを調整 */
+            object-fit: contain;
         }
 
         header nav {
             display: flex;
+            flex-wrap: nowrap;
         }
 
         header nav a {
@@ -60,18 +62,12 @@
 
         @media (max-width: 768px) {
             header .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            header nav {
-                display: none;
-                width: 100%;
-                flex-direction: column;
+                flex-wrap: nowrap;
+                justify-content: space-between;
                 align-items: center;
             }
 
-            header nav.active {
+            header nav {
                 display: flex;
             }
 
@@ -84,14 +80,15 @@
                 cursor: pointer;
             }
 
-            .menu-toggle.active + nav {
-                display: flex;
-            }
-
             header nav a {
                 padding: 10px;
+                margin: 0 5px;
+            }
+
+            header nav.active {
+                display: flex;
+                flex-direction: column;
                 width: 100%;
-                text-align: center;
             }
         }
 
@@ -108,9 +105,15 @@
             transition: transform 1s ease;
         }
 
+        .carousel-images a {
+            flex: 0 0 100%; /* 1枚ずつ表示 */
+        }
+
         .carousel-images img {
             width: 100%;
             height: auto;
+            aspect-ratio: 3/1; /* 横1:縦3の比率 */
+            object-fit: cover; /* 画像の比率を守りつつ、はみ出さないように */
         }
 
         .carousel button {
@@ -150,6 +153,7 @@
             position: relative;
             bottom: 0;
             width: 100%;
+            box-sizing: border-box;
         }
 
         footer a {
@@ -173,6 +177,15 @@
 
             .main-content {
                 font-size: 0.9rem;
+            }
+
+            footer .footer-menu {
+                display: block;
+                text-align: center;
+            }
+
+            footer .footer-menu a {
+                margin: 10px 0;
             }
         }
 
@@ -253,34 +266,31 @@
 <script>
     let pageViewCount = 0;
     const pageViews = document.getElementById('page-views');
-    pageViewCount += 1;
     pageViews.textContent = pageViewCount;
 
-    const currentTime = document.getElementById('current-time');
-    const updateTime = () => {
-        const now = new Date();
-        currentTime.textContent = now.toLocaleString();
-    }
-    setInterval(updateTime, 1000);
+    const currentTimeElem = document.getElementById('current-time');
+    setInterval(() => {
+        const currentDate = new Date();
+        currentTimeElem.textContent = currentDate.toLocaleTimeString();
+    }, 1000);
 
     // メニュートグル
     const menuToggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('header nav');
+
     menuToggle.addEventListener('click', () => {
         nav.classList.toggle('active');
-        menuToggle.classList.toggle('active');
     });
 
-    // クルーセルの操作
+    // クルーセル操作
     const prevButton = document.querySelector('.prev');
     const nextButton = document.querySelector('.next');
     const carouselImages = document.querySelector('.carousel-images');
     let currentIndex = 0;
-    const totalSlides = carouselImages.children.length;
+    const totalSlides = document.querySelectorAll('.carousel-images a').length;
 
-    const updateCarousel = () => {
-        const offset = -currentIndex * 100;
-        carouselImages.style.transform = `translateX(${offset}%)`;
+    function updateCarousel() {
+        carouselImages.style.transform = `translateX(-${currentIndex * 100}%)`;
     }
 
     prevButton.addEventListener('click', () => {
@@ -296,7 +306,7 @@
     setInterval(() => {
         currentIndex = (currentIndex + 1) % totalSlides;
         updateCarousel();
-    }, 5000); // 5秒ごとに自動でスライド
+    }, 5000);
 </script>
 
 </body>
