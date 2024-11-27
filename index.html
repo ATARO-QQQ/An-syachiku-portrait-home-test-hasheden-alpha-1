@@ -22,6 +22,7 @@
             width: 100%;
             z-index: 1000;
             padding: 0;
+            height: 80px; /* ヘッダーの高さを調整 */
         }
 
         header .container {
@@ -68,6 +69,13 @@
             }
 
             header nav {
+                display: none; /* 初期状態では非表示 */
+                flex-direction: column;
+                width: 100%;
+                background-color: #180614;
+            }
+
+            header nav.active {
                 display: flex;
             }
 
@@ -83,12 +91,8 @@
             header nav a {
                 padding: 10px;
                 margin: 0 5px;
-            }
-
-            header nav.active {
-                display: flex;
-                flex-direction: column;
                 width: 100%;
+                text-align: center;
             }
         }
 
@@ -97,7 +101,7 @@
             position: relative;
             width: 100%;
             overflow: hidden;
-            margin-top: 100px; /* ヘッダーとの間隔調整 */
+            margin-top: 90px; /* ヘッダーの高さを避けるために余白を追加 */
         }
 
         .carousel-images {
@@ -264,7 +268,10 @@
 </footer>
 
 <script>
-    let pageViewCount = 0;
+    let pageViewCount = localStorage.getItem('pageViewCount') || 0;
+    pageViewCount++;
+    localStorage.setItem('pageViewCount', pageViewCount);
+
     const pageViews = document.getElementById('page-views');
     pageViews.textContent = pageViewCount;
 
